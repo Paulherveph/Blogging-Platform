@@ -3,25 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const articleField = document.querySelector('.article');
 
   const bannerImage = document.querySelector('#banner-upload');
-  const banner = document.querySelector(".banner");
-  let bannerPath;
+  const banner = document.querySelector('.banner');
+  let bannerpath;
 
   const publishBtn = document.querySelector('.publish-btn');
   const uploadInput = document.querySelector('#image-upload');
 
   bannerImage.addEventListener('change', () => {
-    const file = bannerImage.files[0];
-    if (file && file.type.includes("image")) {
-      // Preview image immediately using FileReader
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        banner.style.backgroundImage = `url(${e.target.result})`; // Set background image to blob URL
-      };
-      reader.readAsDataURL(file);
-
-      // Upload image to the server
-      uploadImage(bannerImage, "banner");
-    }
+    uploadImage(bannerImage, "banner");
   });
 
   uploadInput.addEventListener('change', () => {
@@ -31,21 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const uploadImage = (uploadFile, uploadType) => {
     const [file] = uploadFile.files;
     if (file && file.type.includes("image")) {
-      const formdata = new FormData();
-      formdata.append('image', file);
+      const formData = new FormData();
+      formData.append('image', file);
 
       fetch('/upload', {
-        method: 'post',
-        body: formdata
+        method: 'POST',
+        body: formData
       })
       .then(res => res.json())
       .then(data => {
         if (uploadType === "image") {
           addImage(`${location.origin}/${data}`, file.name);
         } else {
-          bannerPath = `${location.origin}/${data}`;
-          // Optionally update the banner image on successful upload as well
-          // banner.style.backgroundImage = `url("${bannerPath}")`;
+          bannerpath = `${location.origin}/${data}`;
+          banner.style.backgroundImage = `url("${bannerpath}")`;
         }
       })
       .catch(error => console.error('Error uploading image:', error));
@@ -60,4 +48,31 @@ document.addEventListener('DOMContentLoaded', () => {
     articleField.value = articleField.value.slice(0, curPos) + textToInsert + 
     articleField.value.slice(curPos);
   };
+
+  publishBtn.addEventListener('click', () => {
+    if (articleField.value.length && blogTitleField.value.length) {
+      let letters = 'abcdefghijklmnopqrstuvwxyz';
+      let blogTitle = blogTitleField.value.replace(/\s+/g, '-').toLowerCase();
+      let id = '';
+      for (let i = 0; i < 4; i++) {
+        id += letters[Math.floor(Math.random() * letters.length)];
+      }
+
+      let docName = `${blogTitle}-${id}`;
+      let date = new Date();
+
+      db.collection("blogs").doc(docName).set({
+        title: blogTitleField.value,
+        article: articleField.value,
+        bannerImage: bannerpath,
+        publishedAt: `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+      })
+      .then(() => {
+        console.log('Data entered successfully');
+      })
+      .catch((err) => {
+        console.error('Error saving data:', err);
+      });
+    }
+  });
 });
