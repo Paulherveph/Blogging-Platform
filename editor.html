@@ -2,51 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog : Editor</title>
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/editor.css">
+
 </head>
 <body>
+
   <div class="banner">
     <input type="file" accept="image/*" id="banner-upload" hidden>
-    <label for="banner-upload" class="banner-upload-btn"><img src="img/upload.png" alt="upload banner"></label>
-  </div>
-
-  <div class="blog">
-    <textarea class="title" placeholder="Blog title..."></textarea>
-    <textarea class="article" placeholder="Start writing here..."></textarea>
+</div>
+    <label for="banner-upload" class="banner-upload-btn"><img src="img/upload.png" 
+      alt="upload banner"></label>
   </div>
 
   
+
+  <div class="blog">
+    <textarea type="file" class="title" placeholder="Blog title..."></textarea>
+    <textarea type="file" class="article" placeholder="Start writing here..."></textarea>
+  </div>
 
   <div class="blog-options">
     <button class="btn dark publish-btn">Publish</button>
     <input type="file" accept="image/*" id="image-upload" hidden>
     <label for="image-upload" class="btn gray upload-btn">Upload Image</label>
+    <div id="imagePreviewContainer" style="display: none;">
+  </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
-    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js';
-    
-    const firebaseConfig = { 
-      apiKey : "AIzaSyBnXqLohscuhz74tTl4XXRYxBJFrg8xxnM" , 
-      authDomain : "blogging-website-48c92.firebaseapp.com" , 
-      projectId : "blogging-website-48c92" , 
-      storageBucket : "blogging-website-48c92.appspot.com" , 
-      messagingSenderId : "1091336465795" , 
-      appId : "1:1091336465795:web:2605574cf7d90600a8dab6" 
-    };
-    
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-  </script>
-
-  <script type="module" src="js/firebase.js"></script>
-  <script type="module" src="js/editor.js"></script>
+    <script type="module" src="js/firebase.js"></script>
+    <script type="module" src="js/editor.js"></script>
 
 </body>
 </html>
