@@ -1,3 +1,5 @@
+import { db } from './firebase.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const blogTitleField = document.querySelector('.title');
   const articleField = document.querySelector('.article');
@@ -6,7 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const banner = document.querySelector('.banner');
   let bannerpath;
 
-  const publishBtn = document.querySelector('.publish-btn');
+  // Define publishBtn here
+  const publishBtn = document.querySelector('.publish-btn'); 
+
   const uploadInput = document.querySelector('#image-upload');
 
   bannerImage.addEventListener('change', () => {
@@ -27,7 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         body: formData
       })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to upload image');
+        }
+        return res.json();
+      })
       .then(data => {
         if (uploadType === "image") {
           addImage(`${location.origin}/${data}`, file.name);
@@ -36,7 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
           banner.style.backgroundImage = `url("${bannerpath}")`;
         }
       })
-      .catch(error => console.error('Error uploading image:', error));
+      .catch(error => {
+        console.error('Error uploading image:', error);
+        // Handle error here
+      });
     } else {
       alert("Please upload an image file.");
     }
@@ -60,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let docName = `${blogTitle}-${id}`;
       let date = new Date();
+      let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
       db.collection("blogs").doc(docName).set({
         title: blogTitleField.value,
