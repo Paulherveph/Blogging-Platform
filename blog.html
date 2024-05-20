@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="css/editor.css">
   <link rel="stylesheet" href="css/blog.css">
 
+</head>
+<body>
+
   <nav class="navbar">
     <img src="img/logo.png" class="logo" alt="">
     <ul class="links-container">
@@ -18,19 +21,34 @@
   </nav>
 
   <div class="banner"></div>
-
   <div class="blog">
-    <h1 class="title"> Blog Title...</h1>
+    <h1 class="title">Blog Title...</h1>
     <p class="published"><span>published at -</span></p>
-    <div class="article">
-      
-    </div>
+    <a href="" class="btn" id="edit-blog-btn">edit blog</a>
+    <div class="article"></div>
   </div>
 
   <h1 class="sub-heading">Read more</h1>
 
-</head>
-<body>
+   <!--blog section-->
+   <section class="blogs-section">
+    <div class="blog-card">
+      <img src="img/headera.jpg" class="blog-image" alt="Blog Header Image">
+      <h1 class="blog-title">Unraveling the Mysteries of Deep Learning: A Beginner's Guide</h1>
+      <p class="blog-overview">Dive into the world of deep learning with this comprehensive beginner's guide. Discover how neural networks work, explore popular frameworks, and learn how to kick-start your deep learning journey.</p>
+      <a href="/" class="btn dark">read</a>
+    </div>
+  </section>
+
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
   
+
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/home.js"></script>
+  <script type="module" src="js/blog.js"></script>
+  <script src="js/nav.js"></script>
+
 </body>
 </html>
