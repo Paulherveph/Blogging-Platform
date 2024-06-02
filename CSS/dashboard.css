@@ -1,0 +1,48 @@
+body{
+  background: #ececec;
+}
+
+.login{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+  background: #fff;
+}
+
+/* login hover effect */
+
+.firebaseui-idp-button:hover{
+  background: #000;
+  
+}
+
+.firebaseui-idp-button:hover .firebaseui-idp-text{
+  color: #fff !important;
+  transition: .5s;
+}
+
+.heading{
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 60px;
+  text-align: center;
+  position: relative;
+  margin: 100px 0 20px;
+
+}
+
+.btn.grey{
+  background: #c5c5c5;
+  color: #000;
+  margin: 0 10px;
+}
+
+.btn.danger{
+  background: #f00;
+  color: #fff;
+}
