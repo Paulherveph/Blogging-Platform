@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login and Registration Form</title>
+  <style>
+    /* CSS Animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      animation: slideUp 0.5s ease-in-out;
+    }
+
+    form {
+      animation: slideUp 0.7s ease-in-out;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Login and Registration</h1>
+    <div id="login-form">
+      <h2>Login</h2>
+      <form id="login-form-data">
+        <label for="login-name">Name:</label>
+        <input type="text" id="login-name" name="login-name" required>
+        <label for="login-password">Password:</label>
+        <input type="password" id="login-password" name="login-password" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+    <div id="registration-form" style="display: none;">
+      <h2>Registration</h2>
+      <form id="registration-form-data">
+        <label for="reg-name">Name:</label>
+        <input type="text" id="reg-name" name="reg-name" required>
+        <label for="reg-age">Age:</label>
+        <input type="number" id="reg-age" name="reg-age" required>
+        <label for="reg-dob">Date of Birth:</label>
+        <input type="date" id="reg-dob" name="reg-dob" required>
+        <label for="reg-phone">Phone Number:</label>
+        <input type="tel" id="reg-phone" name="reg-phone" required>
+        <label for="reg-email">Email:</label>
+        <input type="email" id="reg-email" name="reg-email" required>
+        <button type="submit">Register</button>
+      </form>
+    </div>
+    <button id="toggle-form">Switch to Registration</button>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const registrationForm = document.getElementById('registration-form');
+    const toggleFormButton = document.getElementById('toggle-form');
+    const loginFormData = document.getElementById('login-form-data');
+    const registrationFormData = document.getElementById('registration-form-data');
+
+    toggleFormButton.addEventListener('click', () => {
+      if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        registrationForm.style.display = 'none';
+        toggleFormButton.textContent = 'Switch to Registration';
+      } else {
+        loginForm.style.display = 'none';
+        registrationForm.style.display = 'block';
+        toggleFormButton.textContent = 'Switch to Login';
+      }
+    });
+
+    loginFormData.addEventListener('submit', (event) => {
+      event.preventDefault();
+      // Implement login logic here
+      console.log('Login form submitted');
+    });
+
+    registrationFormData.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const age = document.getElementById('reg-age').value;
+      const dob = document.getElementById('reg-dob').value;
+      const phone = document.getElementById('reg-phone').value;
+      const email = document.getElementById('reg-email').value;
+
+      try {
+        const response = await fetch('/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, age, dob, phone, email })
+        });
+
+        if (response.ok) {
+          console.log('Registration successful');
+          // Reset the form
+          registrationFormData.reset();
+        } else {
+          console.error('Registration failed');
+        }
+      } catch (error) {
+        console.error('Error registering user:', error);
+      }
+    });
+  </script>
+</body>
+</html>
