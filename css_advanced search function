@@ -1,4 +1,4 @@
-/* General styling for body */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -6,7 +6,6 @@ body {
     margin: 0;
     padding: 0;
 }
-
 /* Container for the search bar */
 .advanced-search {
     max-width: 600px;
@@ -18,7 +17,6 @@ body {
     display: flex;
     gap: 10px;
 }
-
 /* Styling for the input fields */
 .advanced-search input[type="text"],
 .advanced-search select {
@@ -28,7 +26,6 @@ body {
     border-radius: 4px;
     box-sizing: border-box;
 }
-
 /* Styling for the search button */
 .advanced-search button {
     padding: 10px 20px;
