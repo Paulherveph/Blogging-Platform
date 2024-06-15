@@ -1,6 +1,10 @@
+
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {  query, where,  deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "your-api-key",
@@ -11,10 +15,17 @@ const firebaseConfig = {
   appId: "your-app-id"
 };
 
-// Initialize Firebase
+/ Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const auth = getAuth(app);
+auth.languageCode = 'it';
+const provider = new  GoogleAuthProvider();
 
-export { db, auth };
+// References to storage paths
+const imagesRef = ref(storage, 'images');
+
+export { db, imagesRef, auth, collection, doc, getDoc, getDocs,  provider, createUserWithEmailAndPassword, signInWithEmailAndPassword, query, where,  deleteDoc };
+
 
