@@ -1,132 +1,135 @@
-import { db } from './firebase.js';
+// editor.js
+
+import { db, imagesRef, auth } from './firebase.js';
+import { collection, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { uploadBytes, getDownloadURL, ref } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Check if we are editing an existing blog post
-  let blogiID = location.pathname.split("/");
-  blogiID.shift(); // Remove the first element which is empty from the array
-
-  // Selecting DOM elements
-  const blogTitleField = document.querySelector('.title');
-  const articleField = document.querySelector('.article');
-
-  const bannerImage = document.querySelector('#banner-upload');
-  const banner = document.querySelector('.banner'); 
-  let bannerPath; 
-
-  const publishBtn = document.querySelector('.publish-btn');
-  const uploadInput = document.querySelector('#image-upload');
-
-  // Event listener for banner image upload
-  bannerImage.addEventListener('change', () => {
-    uploadImage(bannerImage, "banner");
-  });
-
-  // Event listener for article image upload
-  uploadInput.addEventListener('change', () => {
-    uploadImage(uploadInput, "image");
-  });
-
-  // Function to handle image uploads
-  const uploadImage = (uploadFile, uploadType) => {
-    const [file] = uploadFile.files;
-    if (file && file.type.includes("image")) {
-      const formData = new FormData();
-      formData.append('image', file);
-
-      fetch('/upload', {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to upload image');
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (uploadType === "image") {
-          addImage(`${location.origin}/${data}`, file.name); // Fixed data access
-        } else {
-          bannerPath = `${location.origin}/${data}`;
-          banner.style.backgroundImage = `url("${bannerPath}")`;
-        }
-      })
-      .catch(error => {
-        console.error('Error uploading image:', error);
-        // Handle error here
-      });
+  auth.onAuthStateChanged((user) => {
+    if (!user) {
+      location.replace("/admin");
     } else {
-      alert("Please upload an image file.");
-    }
-  };
+      const blogID = getBlogIdFromUrl();
 
-  // Function to insert uploaded image into the article content
-  const addImage = (imagePath, alt) => {
-    let curPos = articleField.selectionStart;
-    let textToInsert = `\r![${alt}](${imagePath})\r`;
-    articleField.value = articleField.value.slice(0, curPos) + textToInsert + articleField.value.slice(curPos);
-  };
+      const blogTitleField = document.querySelector('.title');
+      const articleField = document.querySelector('.article');
+      const bannerImage = document.querySelector('#banner-upload');
+      const banner = document.querySelector('.banner');
+      let bannerPath;
 
-  // Event listener for the publish button to save blog post data
-  publishBtn.addEventListener('click', () => {
-    if (articleField.value.length && blogTitleField.value.length) {
-      let docName;
-      if (blogiID[0] === 'editor') {
-        // Generate a unique ID for the new blog post
-        let letters = 'abcdefghijklmnopqrstuvwxyz';
-        let blogTitle = blogTitleField.value.replace(/\s+/g, '-').toLowerCase();
+      const publishBtn = document.querySelector('.publish-btn');
+      const uploadInput = document.querySelector('#image-upload');
+
+      bannerImage.addEventListener('change', (e) => handleImageUpload(e.target.files[0], "banner"));
+      uploadInput.addEventListener('change', (e) => handleImageUpload(e.target.files[0], "image"));
+
+      async function handleImageUpload(file, uploadType) {
+        if (file && file.type.includes("image")) {
+          try {
+            const downloadURL = await uploadImageToFirebase(file, file.name);
+            console.log(`Image uploaded successfully. downloadURL: ${downloadURL}`);
+            if (uploadType === "image") {
+              addImage(downloadURL, file.name);
+            } else {
+              bannerPath = downloadURL;
+              banner.style.backgroundImage = `url("${bannerPath}")`;
+            }
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image: ' + error.message);
+          }
+        } else {
+          alert("Please upload an image file.");
+        }
+      }
+
+      async function uploadImageToFirebase(file, fileName) {
+        const imageRef = ref(imagesRef, fileName);
+        const snapshot = await uploadBytes(imageRef, file);
+        return getDownloadURL(snapshot.ref);
+      }
+
+      function addImage(imagePath, alt) {
+        console.log(`addImage called with imagePath: ${imagePath} and alt: ${alt}`);
+        const curPos = articleField.selectionStart;
+        const textToInsert = `\r![${alt}](${imagePath})\r`;
+
+        // Insert the image markdown at the cursor position
+        const existingText = articleField.value;
+        const textBefore = existingText.slice(0, curPos);
+        const textAfter = existingText.slice(curPos);
+        const newText = textBefore + textToInsert + textAfter;
+
+        articleField.value = newText;
+      }
+
+      publishBtn.addEventListener('click', async () => {
+        if (articleField.value.length && blogTitleField.value.length) {
+          const docName = blogID ? blogID : generateDocName(blogTitleField.value);
+          const date = new Date();
+          const publishedAt = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+          const author = auth.currentUser.email.split("@")[0];
+
+          try {
+            await setDoc(doc(collection(db, "blogs"), docName), {
+              title: blogTitleField.value,
+              article: articleField.value,
+              bannerImage: bannerPath,
+              publishedAt,
+              author
+            });
+            alert('Blog post published successfully');
+            location.href = `/${docName}`;
+          } catch (error) {
+            console.error('Error saving data:', error);
+            if (error.message.includes("Function setDoc() called with invalid data. Unsupported field value: undefined")) {
+              alert("Error saving data: Please ensure all fields, including the banner image, are filled out correctly.");
+            } else {
+              alert('Error saving data: ' + error.message);
+            }
+          }
+        } else {
+          alert("Please provide both a blog title and content.");
+        }
+      });
+
+      function generateDocName(title) {
+        const letters = 'abcdefghijklmnopqrstuvwxyz';
+        const blogTitle = title.replace(/\s+/g, '-').toLowerCase();
         let id = '';
         for (let i = 0; i < 4; i++) {
           id += letters[Math.floor(Math.random() * letters.length)];
         }
-        docName = `${blogTitle}-${id}`;
-      } else {
-        docName = decodeURI(blogiID[0]);
+        return `${blogTitle}-${id}`;
       }
 
-      let date = new Date();
-      let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      async function fetchBlogData() {
+        if (!blogID) return;
 
-      // Save blog post data to Firestore
-      db.collection("blogs").doc(docName).set({
-        title: blogTitleField.value,
-        article: articleField.value,
-        bannerImage: bannerPath,
-        publishedAt: `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`,
-        author: auth.currentUser.email.split("@")[0] // this will return ["example","@gmail.com"]
-      })
-      .then(() => {
-        console.log('Data entered successfully');
-      })
-      .catch((error) => {
-        console.error('Error saving data:', error); // Log the error to the console
-      });
-    } else {
-      // If the necessary fields are not filled, display an alert or handle it appropriately
-      alert("Please provide both a blog title and content.");
+        const docRef = doc(collection(db, "blogs"), blogID);
+        try {
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            bannerPath = data.bannerImage;
+            banner.style.backgroundImage = `url(${bannerPath})`;
+            blogTitleField.value = data.title;
+            articleField.value = data.article;
+          } else {
+            location.replace("/");
+          }
+        } catch (error) {
+          console.error('Error fetching document:', error);
+          alert('Error fetching blog data: ' + error.message);
+        }
+      }
+
+      function getBlogIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('blogId');
+      }
+
+      fetchBlogData();
     }
   });
 });
-
-// Check if the user is logged in
-auth.onAuthStateChanged((user) => {
-  if (!user) {
-    location.replace("/admin"); // Redirect to admin route if no one is logged in
-  }
-}); 
-
-if (blogiID[0] !== "editor") {
-  // We are in an existing blog edit route
-  let docRef = db.collection("blogs").doc(decodeURI(blogiID[0]));
-  docRef.get().then((doc) => {
-    if (doc.exists) {
-      let data = doc.data();
-      bannerPath = data.bannerImage; // Fixed variable name
-      banner.style.backgroundImage = `url(${bannerPath})`;
-      blogTitleField.value = data.title;
-      articleField.value = data.article;
-    } else {
-      location.replace("/");  // Redirect to home route
-    }
-  });
-}
