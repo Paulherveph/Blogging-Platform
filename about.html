@@ -1,72 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
-    <link rel="stylesheet" href="./CSS/about.css">
-    <link rel="stylesheet" href="./CSS/home.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <nav class="navbar">
-        <img src="img/logo.png" class="logo" alt="Logo">
-        <ul class="links-container">
-            <li class="link-item"><a href="/" class="link">home</a></li>
-            <li class="link-item"><a href="/editor" class="link">Editor</a></li>
-            <li class="link-item"><a href="/about" class="link">About Us</a></li>
-        </ul>
-    </nav>
 
-    <main>
-      <section class="about-section">
-          <div class="about-content">
-              <h1>About</h1>
-              <h2> AZERTY-Blog</h2>
-              <p>AZERTyuiop qsdfghjklm wxcvbn :</p>
-              <p> THE azerty is : </p>
-          </div>
-          <div class="about-image">
-              <img src="About.png" alt="About Image">
-          </div>
-      </section>
-  </main>
+  <nav class="navbar">
+    <img src="img/logo.png" class="logo" alt="Logo">
+    <ul class="links-container">
+      <li class="link-item"><a href="/" class="link">home</a></li>
+      <li class="link-item"><a href="/editor" class="link">editor</a></li>
+    </ul>
+  </nav>
 
-    <footer>
-        <div class="footer-content">
-            <div class="site-name">Blogging Platform</div>
-            <div class="topics">
-                <div class="topic">
-                    <h3>Topic</h3>
-                    <ul>
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                    </ul>
-                </div>
-                <div class="topic">
-                    <h3>Topic</h3>
-                    <ul>
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                    </ul>
-                </div>
-                <div class="topic">
-                    <h3>Topic</h3>
-                    <ul>
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="social-links">
-                <a href="#"><img src="/Public/img/Facebook.png" alt="Facebook"></a>
-                <a href="#"><img src="/Public/img/LinkedIn.png" alt="LinkedIn"></a>
-                <a href="#"><img src="/Public/img/youtube.png" alt="YouTube"></a>
-                <a href="#"><img src="/Public/img/Instagram.png" alt="Instagram"></a>
-            </div>
-        </div>
-    </footer>
+  <div class="login">
+    <form id="loginFormElement">
+      <input type="email" name="loginEmail" placeholder="Email" required>
+      <input type="password" name="loginPassword" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <h1 class="heading">Your Blogs</h1>
+
+  <section class="blogs-section">
+    <!-- Your blog cards will be dynamically added here -->
+  </section>
+
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/dashboard.js"></script>
+  <script type="module" src="js/nav.js"></script>
 </body>
 </html>
