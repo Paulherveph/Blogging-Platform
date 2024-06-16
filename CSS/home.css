@@ -34,6 +34,18 @@ body{
   z-index: 9;
 }
 
+/* Styles for screens smaller than 768px */
+@media screen and (max-width: 768px) {
+    body { font-size: 14px; }
+    .image { width: 100%; }
+}
+
+/* Styles for screens larger than 768px */
+@media screen and (min-width: 768px) {
+    body { font-size: 16px; }
+    .image { width: 50%; }
+}
+
 .links-container{
   display: flex;
   list-style: none;
@@ -51,7 +63,7 @@ body{
 
 .header{
  
-  margin-top: 60px;
+  margin-top: 100px;
   width: 100%;
   height: calc(100vh - 60px);
   background-image:url(../img/header.jpg);
@@ -70,7 +82,7 @@ body{
   text-transform: capitalize;
   font-size: 80px;
   line-height: 60px;
-  margin-bottom: 80px;
+  margin-bottom: 8px;
 }
 
 .heading .small{
@@ -97,7 +109,7 @@ body{
   width: 100%;
   padding: 50px 5vw;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2,1fr);
   grid-gap: 80px;
 }
 
@@ -114,7 +126,7 @@ body{
   line-height: 30px;
 }
 
-.btn.dark{
+.btn-dark{
   background: #1b1b1b;
   color: #fff;
 }
