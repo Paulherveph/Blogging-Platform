@@ -40,7 +40,7 @@ const setupBlog = (data) => {
     blogTitle.textContent = data.title;
     publish.textContent = `Published at ${data.publishedAt} -- ${data.author}`;
 
-  /*   try {
+    try {
         if (auth.currentUser && data.author === auth.currentUser.email.split('@')[0]) {
             let editBtn = document.getElementById('edit-blog-btn');
             editBtn.style.display = "inline";
@@ -48,7 +48,7 @@ const setupBlog = (data) => {
         }
     } catch (error) {
         console.error('Error processing editing permissions:', error);
-    } */
+    } 
 
     const article = document.querySelector('.article');
     addArticle(article, data.article);
