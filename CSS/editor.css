@@ -3,7 +3,41 @@
   height:400px ;
   position: relative;
   background: #e7e7e7;
-  background-size: cover;
+  background-size: cover;body{
+  background: #ececec;
+}
+
+
+.heading{
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 60px;
+  text-align: center;
+  position: relative;
+  margin: 100px 0 20px;
+
+}
+
+.btn.grey{
+  background: #c5c5c5;
+  color: #000;
+  margin: 0 10px;
+}
+
+.btn.danger{
+  background: #f00;
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .heading {
+    font-size: 40px;
+  }
+
+  .blog-card {
+    width: 100%;
+  }
+}
   background-position: center;
 }
 
