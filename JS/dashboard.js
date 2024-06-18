@@ -1,3 +1,5 @@
+// dashboard.js
+
 import { auth, db, signInWithEmailAndPassword, collection, query, where, getDocs, doc, deleteDoc } from './firebase.js';
 
 document.addEventListener('DOMContentLoaded', function () {
