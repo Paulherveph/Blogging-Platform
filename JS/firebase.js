@@ -29,3 +29,4 @@ const provider = new  GoogleAuthProvider();
 const imagesRef = ref(storage, 'images');
 
 export { db, imagesRef, auth, collection, doc, getDoc, getDocs,  provider, createUserWithEmailAndPassword, signInWithEmailAndPassword, query, where,  deleteDoc };
+
