@@ -1,13 +1,1 @@
-# Redirect rules for Netlify
 
-# Redirect root to home.html
-/ /home
-
-# Redirect /editor to editor.html
-/editor /editor
-
-# Redirect /about to about.html (if it exists)
-/about /about
-
-# Handle dynamic blog post URLs
-/* /blog
